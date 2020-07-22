@@ -7,13 +7,18 @@ jobs:
       - checkout
       - run:
           name: Install ansible-lint
-          command: pip install ansible ansible-lint yamllint
+          command: pip install ansible ansible-lint yamllint --progress-bar off
       - run:
           name: Show ansible version
           command: ansible --version
       - run:
+          name: Create symlink for role
+          command: >
+            mkdir -p ~/.ansible/roles
+              ln -s $(pwd) ~/.ansible/roles/${CIRCLE_PROJECT_REPONAME}
+      - run:
           name: Syntax check playbook
-          command: ansible-playbook --syntax-check tests/test.yml
+          command: pwd; ls; ansible-playbook --syntax-check tests/test.yml
       - run:
           name: Show ansible-lint version
           command: ansible-lint --version
