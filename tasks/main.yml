@@ -1,2 +1,36 @@
 ---
-# tasks file for template
+- name: install nessus agent (windows)
+  win_package:
+    path: '{{ win_agent_path }}\\{{ item.name }}'
+    chdir: '{{ win_agent_path }}'
+    arguments:
+      - 'NESSUS_SERVER={{ nessus_server_id }}'
+      - 'NESSUS_KEY={{ nessus_agent_key }}'
+      - 'NESSUS_PORT={{ nessus_port_id }}'
+    state: present
+    log_path: '{{ win_agent_logs }}\\{{ item.name }}_log.txt'
+    validate_certs: no
+  with_items:
+    - { name: '{{ windows_nessus_agent_filename }}' }
+  when: ansible_os_family = 'Windows'
+
+- name: install nessus agent (redhat)
+  yum:
+    name: "{{ lin_agent_path }}{{ redhat_nessus_agent_filename }}"
+    state: present
+  when: ansible_os_family = 'RedHat'
+
+- name: register nessus agent (redhat)
+  shell: "/opt/nessus_agent/sbin/nessuscli agent link --key={{ nessus_agent_key }} --groups='{{ group_name }}' --host='{{ nessus_server_id }}' --port='{{ nessus_port_id }}'"
+  args:
+    creates: "/opt/nessus_agent/var/nessus/master.key"
+  when: ansible_os_family = 'RedHat'
+
+- name: ensure required services are started (redhat)
+  service:
+    name: "{{ item }}"
+    enabled: yes
+    state: started
+  with_items:
+    - nessusagent
+  when: ansible_os_family = 'RedHat'
