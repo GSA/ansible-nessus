@@ -19,6 +19,7 @@ Role Variables
 - nessus_port_id: #nessus agent port
 - group_name: #nessus agent group name
 - nessus_agent_key: #nessus agent key (required)
+- nessus_path: #nessus agent location
 
 Dependencies
 ------------

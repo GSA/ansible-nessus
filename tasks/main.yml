@@ -21,7 +21,7 @@
   when: ansible_os_family = 'RedHat'
 
 - name: register nessus agent (redhat)
-  shell: "/opt/nessus_agent/sbin/nessuscli agent link --key={{ nessus_agent_key }} --groups='{{ group_name }}' --host='{{ nessus_server_id }}' --port='{{ nessus_port_id }}'"
+  shell: "{{ nessus_path }} agent link --key={{ nessus_agent_key }} --groups='{{ group_name }}' --host='{{ nessus_server_id }}' --port='{{ nessus_port_id }}'"
   args:
     creates: "/opt/nessus_agent/var/nessus/master.key"
   when: ansible_os_family = 'RedHat'
