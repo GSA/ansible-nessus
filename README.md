@@ -29,9 +29,9 @@ Example Playbook
 ----------------
 
 ```yaml
-    - hosts: servers
-      roles:
-         - ansible-nessus
+- hosts: servers
+  roles:
+     - ansible-nessus
 ```
 
 Public domain
