@@ -1,5 +1,5 @@
-name: 'GSA/[ROLE_NAME]'
-description: '[ROLE_DESCRIPTION]'
+name: 'GSA/ansible-nessus'
+description: 'repository for grace ansible role to install nessus agent'
 license: cc0-1.0
 openSourceProject: 1
 governmentWideReuseProject: 1
