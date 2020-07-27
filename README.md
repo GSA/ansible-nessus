@@ -6,20 +6,22 @@ This ansible role installs and configures the nessus agent required to communica
 Requirements
 ------------
 
-Required Packages
+Required Packages (this role requires access to the following packages/installers)
 - nessus.rpm - redhat installer package
 - nessus.msi - windows installer package
 
 Role Variables
 --------------
 
-- redhat_nessus_agent_filename: #redhat installer msi
-- windows_nessus_agent_filename: #windows installer msi
-- nessus_server_id: #nessus host
-- nessus_port_id: #nessus agent port
-- group_name: #nessus agent group name
-- nessus_agent_key: #nessus agent key (required)
-- nessus_path: #nessus agent location
+| Variable | Default | Purpose |
+| ------ | ------ | ------ |
+| redhat_nessus_agent_filename | "" | redhat installer msi |
+| windows_nessus_agent_filename | "" | windows installer msi |
+| nessus_server_id | "" | nessus host |
+| nessus_port_id | "" | agent port |
+| group_name | "" | nessus agent group name |
+| nessus_agent_key | "" | nessus agent key |
+| nessus_path | "" | nessus agent path |
 
 Dependencies
 ------------
