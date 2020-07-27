@@ -1,0 +1,38 @@
+---
+- name: create {{ lin_agent_path }} directory
+  file:
+    path: '{{ lin_agent_path }}'
+    state: directory
+    mode: '0755'
+
+- name: checking for installer
+  stat:
+    path: '{{ lin_agent_path }}{{ redhat_nessus_agent_filename }}'
+  register: installer
+
+- name: move installer to {{ lin_install_path }} directory
+  copy:
+    src: '{{ lin_agent_path }}/{{ item.name }}'
+    dest: '{{ lin_agent_path }}/{{ item.name }}'
+    mode: '0755'
+  with_items:
+    - { name: '{{ redhat_nessus_agent_filename }}'}
+  when: not installer.stat.exists
+
+- name: install nessus agent (redhat)
+  yum:
+    name: "{{ lin_agent_path }}/{{ redhat_nessus_agent_filename }}"
+    state: present
+
+- name: register nessus agent (redhat)
+  shell: "{{ nessus_path }} agent link --key={{ nessus_agent_key }} --groups='{{ group_name }}' --host='{{ nessus_server_id }}' --port='{{ nessus_port_id }}'"
+  args:
+    creates: "/opt/nessus_agent/var/nessus/master.key"
+
+- name: ensure required services are started (redhat)
+  service:
+    name: "{{ item }}"
+    enabled: yes
+    state: started
+  with_items:
+    - nessusagent
