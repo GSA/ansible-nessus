@@ -15,7 +15,7 @@ Role Variables
 
 | Variable | Default | Purpose |
 | ------ | ------ | ------ |
-| redhat_nessus_agent_filename | "" | redhat installer msi |
+| redhat_nessus_agent_filename | "" | redhat installer rpm |
 | windows_nessus_agent_filename | "" | windows installer msi |
 | nessus_server_id | "" | nessus host |
 | nessus_port_id | "" | agent port |

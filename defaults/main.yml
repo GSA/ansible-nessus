@@ -4,3 +4,5 @@ win_agent_path: "C:\\Temp\\Agents\\" # default agent path directory windows
 lin_agent_path: "/opt/GSA/install_files" # default agent path directory redhat
 win_agent_logs: "C:\\Temp\\Agents\\Logs" # default agent log directory windows
 nessus_path: "/opt/nessus_agent/sbin/nessuscli" # default nessus agent path
+windows_nessus_agent_filename: "nessus.msi"
+redhat_nessus_agent_filename: "nessus.rpm"
