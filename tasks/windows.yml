@@ -33,4 +33,5 @@
     - { name: '{{ windows_nessus_agent_filename }}' }
 
 - name: link nessus agent (windows)
-  win_command: '{{ nessus_agent_path }} agent link --key={{ nessus_agent_key }} --host={{ nessus_server_id }} --port={{ nessus_port_id }}'
+  win_command: >-
+    '{{ win_nessus_path }} agent link --key={{ nessus_agent_key }} --host={{ nessus_server_id }} --port={{ nessus_port_id }}'

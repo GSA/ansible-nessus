@@ -25,7 +25,8 @@
     state: present
 
 - name: register nessus agent (redhat)
-  shell: "{{ lin_nessus_path }} agent link --key={{ nessus_agent_key }} --groups='{{ group_name }}' --host='{{ nessus_server_id }}' --port='{{ nessus_port_id }}'"
+  shell: >-
+    "{{ lin_nessus_path }} agent link --key={{ nessus_agent_key }} --groups='{{ group_name }}' --host='{{ nessus_server_id }}' --port='{{ nessus_port_id }}'"
   args:
     creates: "/opt/nessus_agent/var/nessus/master.key"
 
