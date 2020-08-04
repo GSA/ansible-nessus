@@ -1,2 +1,4 @@
 ---
-# vars file for ansible-nessus
+nessus_agent_key: ""
+nessus_server_id: ""
+nessus_port_id: ""
