@@ -6,9 +6,9 @@
     state: directory
     mode: '0755'
 
-- name: install fireeye agent (redhat)
+- name: install nessus agent (redhat)
   yum:
-    name: '{{ redhat_fireeye_agent_url }}'
+    name: '{{ redhat_nessus_agent_url }}'
     state: present
 
 - name: register nessus agent (redhat)
@@ -18,7 +18,7 @@
     --host='{{ nessus_server_id }}' \
     --port='{{ nessus_port_id }}''
   args:
-    creates: "/opt/nessus_agent/var/nessus/master.key"
+    creates: "{{ redhat_agent_path }}/var/nessus/master.key"
 
 - name: start nessus agent
   service:
