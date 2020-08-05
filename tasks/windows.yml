@@ -15,13 +15,14 @@
   win_package:
     path: '{{ windows_nessus_agent_url }}'
     log_path: '{{ windows_agent_log }}\\nessus_log.txt'
+    product_id: '{{ windows_nessus_product_id }}'
     validate_certs: no
     state: present
     arguments: /qn
 
 - name: link nessus agent (windows)
-  win_command: |
-    '{{ windows_agent_path }} agent link \
-    --key={{ nessus_agent_key }} \
-    --host={{ nessus_server_id }} \
-    --port={{ nessus_port_id }}'
+  win_command: >
+    {{ windows_agent_path }}/sbin/nessuscli agent link
+    --key={{ nessus_agent_key }}
+    --host={{ nessus_server_id }}
+    --port={{ nessus_port_id }}

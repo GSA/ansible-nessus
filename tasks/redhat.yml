@@ -1,29 +1,27 @@
 ---
-- name: create {{ redhat_agent_path }} directory
-  file:
-    path: '{{ redhat_agent_path }}'
-    recurse: yes
-    state: directory
-    mode: '0755'
-
 - name: install nessus agent (redhat)
   yum:
     name: '{{ redhat_nessus_agent_url }}'
     state: present
 
+- name: check agent link status
+  command: '{{ redhat_nessus_agent_path }}/sbin/nessuscli agent status'
+  become: yes
+  register: nessus_link
+  ignore_errors: yes
+  changed_when: nessus_link.rc != 0
+
 - name: register nessus agent (redhat)
-  command: |
-    '{{ redhat_nessus_agent_path }}/sbin/nessuscli agent link \
-    --key={{ nessus_agent_key }} \
-    --host='{{ nessus_server_id }}' \
-    --port='{{ nessus_port_id }}''
-  args:
-    creates: "{{ redhat_nessus_agent_path }}/var/nessus/master.key"
+  command: >
+    {{ redhat_nessus_agent_path }}/sbin/nessuscli agent link
+    --key={{ nessus_agent_key }}
+    --host={{ nessus_server_id }}
+    --port={{ nessus_port_id }}
+  become: yes
+  when: nessus_link is failed
 
 - name: start nessus agent
   service:
-    name: "{{ item }}"
+    name: nessusagent
     enabled: yes
     state: started
-  with_items:
-    - nessusagent
