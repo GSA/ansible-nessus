@@ -3,3 +3,8 @@
 redhat_agent_path: "/opt/nessus_agent/sbin/nessuscli" # default redhat install directory
 windows_agent_path: "C:\\Program Files\\Tenable\\Nessus Agent" # default windows install directory
 windows_agent_log: "C:\\Temp\\Logs" # default agent windows log directory
+windows_nessus_agent_url: ""
+redhat_nessus_agent_url: ""
+nessus_agent_key: ""
+nessus_server_id: ""
+nessus_port_id: ""
