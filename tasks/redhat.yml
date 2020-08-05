@@ -13,12 +13,12 @@
 
 - name: register nessus agent (redhat)
   command: |
-    '{{ redhat_agent_path }}/sbin/nessuscli agent link \
+    '{{ redhat_nessus_agent_path }}/sbin/nessuscli agent link \
     --key={{ nessus_agent_key }} \
     --host='{{ nessus_server_id }}' \
     --port='{{ nessus_port_id }}''
   args:
-    creates: "{{ redhat_agent_path }}/var/nessus/master.key"
+    creates: "{{ redhat_nessus_agent_path }}/var/nessus/master.key"
 
 - name: start nessus agent
   service:
