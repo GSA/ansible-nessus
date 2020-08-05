@@ -1,37 +1,27 @@
 ---
-- name: create {{ win_agent_path }} directory
+- name: create {{ windows_agent_log }} directory
   win_file:
-    path: '{{ win_agent_path }}'
+    path: '{{ windows_agent_log }}'
+    recurse: yes
     state: directory
 
-- name: create {{ win_agent_logs }} directory
+- name: create {{ windows_agent_path }} directory
   win_file:
-    path: '{{ win_agent_logs }}'
+    path: '{{ windows_agent_path }}'
+    recurse: yes
     state: directory
-
-- name: checking for installer
-  win_stat:
-    path: '{{ win_agent_path }}{{ windows_nessus_agent_filename }}'
-  register: installer
-
-- name: move installer to {{ win_agent_path }} directory
-  win_copy:
-    src: '{{ lin_agent_path }}/{{ item.name }}'
-    dest: '{{ win_agent_path }}{{ item.name }}'
-  with_items:
-    - { name: '{{ windows_nessus_agent_filename }}'}
-  when: not installer.stat.exists
 
 - name: install nessus agent (windows)
   win_package:
-    path: '{{ win_agent_path }}\\{{ item.name }}'
-    chdir: '{{ win_agent_path }}'
-    state: present
-    log_path: '{{ win_agent_logs }}\\{{ item.name }}_log.txt'
+    path: '{{ windows_nessus_agent_url }}'
+    log_path: '{{ windows_agent_log }}\\nessus_log.txt'
     validate_certs: no
-  with_items:
-    - { name: '{{ windows_nessus_agent_filename }}' }
+    state: present
+    arguments: /qn
 
 - name: link nessus agent (windows)
-  win_command: >-
-    '{{ win_nessus_path }} agent link --key={{ nessus_agent_key }} --host={{ nessus_server_id }} --port={{ nessus_port_id }}'
+  win_command: |
+    '{{ windows_agent_path }} agent link \
+    --key={{ nessus_agent_key }} \
+    --host={{ nessus_server_id }} \
+    --port={{ nessus_port_id }}'

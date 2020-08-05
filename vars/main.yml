@@ -1,4 +1,6 @@
 ---
+windows_nessus_agent_url: ""
+redhat_nessus_agent_url: ""
 nessus_agent_key: ""
 nessus_server_id: ""
 nessus_port_id: ""
