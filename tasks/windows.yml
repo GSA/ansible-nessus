@@ -22,7 +22,7 @@
 
 - name: link nessus agent (windows)
   win_command: >
-    {{ windows_agent_path }}/sbin/nessuscli agent link
+    '{{ windows_agent_path }}\\nessuscli agent link
     --key={{ nessus_agent_key }}
     --host={{ nessus_server_id }}
-    --port={{ nessus_port_id }}
+    --port={{ nessus_port_id }}'
