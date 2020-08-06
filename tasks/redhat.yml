@@ -11,6 +11,7 @@
   ignore_errors: yes
   changed_when: nessus_link.rc != 0
 
+# adding ignore_errors since this will fail until you have an environment with connectivity to a nessus master host
 - name: register nessus agent (redhat)
   command: >
     {{ redhat_nessus_agent_path }}/sbin/nessuscli agent link
@@ -19,9 +20,12 @@
     --port={{ nessus_port_id }}
   become: yes
   when: nessus_link is failed
+  ignore_errors: yes
 
+# adding ignore_errors since this will fail until you have an environment with connectivity to a nessus master host
 - name: start nessus agent
   service:
     name: nessusagent
     enabled: yes
     state: started
+  ignore_errors: yes
