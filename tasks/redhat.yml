@@ -16,6 +16,7 @@
   yum:
     name: '{{ redhat_nessus_agent_url }}'
     state: present
+    validate_certs: no
   when: path.stat.islnk is not defined
 
 - name: check agent link status
