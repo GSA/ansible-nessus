@@ -23,7 +23,7 @@
   become: yes
   register: nessus_link
   ignore_errors: yes # adding ignore_errors since this will fail until you have an environment with connectivity to a nessus master host
-  changed_when: nessus_link.rc != 0 and path.stat.islnk is not defined
+  changed_when: nessus_link.rc != 0 and path.stat.islnk is defined
 
 - name: register nessus agent (redhat)
   command: >
@@ -32,7 +32,7 @@
     --host={{ nessus_server_id }}
     --port={{ nessus_port_id }}
   become: yes
-  when: nessus_link is failed and path.stat.islnk is not defined
+  when: nessus_link is failed and path.stat.islnk is defined
   ignore_errors: yes # adding ignore_errors since this will fail until you have an environment with connectivity to a nessus master host
 
 - name: start nessus agent
