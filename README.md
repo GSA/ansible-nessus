@@ -6,22 +6,36 @@ This ansible role installs and configures the nessus agent required to communica
 Requirements
 ------------
 
-Required Packages (this role requires access to the following packages/installers)
+Required Packages (this role requires access to the following packages/installers via an external repository)
 - nessus.rpm - redhat installer package
 - nessus.msi - windows installer package
 
 Role Variables
 --------------
 
+### Universal
+
 | Variable | Default | Purpose |
 | ------ | ------ | ------ |
-| redhat_nessus_agent_filename | "" | redhat installer msi |
-| windows_nessus_agent_filename | "" | windows installer msi |
 | nessus_server_id | "" | nessus host |
 | nessus_port_id | "" | agent port |
-| group_name | "" | nessus agent group name |
 | nessus_agent_key | "" | nessus agent key |
-| nessus_path | "" | nessus agent path |
+
+### Windows
+
+| Variable | Default | Purpose |
+| ------ | ------ | ------ |
+| windows_nessus_agent_path | "C:\\Program Files\\Tenable\\Nessus Agent" | default windows install directory |
+| windows_nessus_agent_url | "" | windows installer msi |
+| windows_nessus_product_id | "" | windows product_id |
+| windows_agent_log | "C:\Temp\Logs" | default agent windows log directory |
+
+### Redhat
+
+| Variable | Default | Purpose |
+| ------ | ------ | ------ |
+| redhat_nessus_agent_path | "/opt/nessus_agent/sbin/nessuscli" | default redhat install directory |
+| redhat_nessus_agent_url | "" | redhat installer rpm |
 
 Dependencies
 ------------

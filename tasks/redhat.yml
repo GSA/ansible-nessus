@@ -1,17 +1,30 @@
 ---
+- name: checking for agent install
+  stat:
+    path: '{{ redhat_nessus_agent_path }}'
+  register: path
+
+- debug:
+    msg: "nessus agent not found"
+  when: path.stat.islnk is not defined
+
+- debug:
+    msg: "nessus agent found skipping install"
+  when: path.stat.islnk is defined
+
 - name: install nessus agent (redhat)
   yum:
     name: '{{ redhat_nessus_agent_url }}'
     state: present
+  when: path.stat.islnk is not defined
 
 - name: check agent link status
   command: '{{ redhat_nessus_agent_path }}/sbin/nessuscli agent status'
   become: yes
   register: nessus_link
-  ignore_errors: yes
-  changed_when: nessus_link.rc != 0
+  ignore_errors: yes # adding ignore_errors since this will fail until you have an environment with connectivity to a nessus master host
+  changed_when: nessus_link.rc != 0 and path.stat.islnk is not defined
 
-# adding ignore_errors since this will fail until you have an environment with connectivity to a nessus master host
 - name: register nessus agent (redhat)
   command: >
     {{ redhat_nessus_agent_path }}/sbin/nessuscli agent link
@@ -19,13 +32,12 @@
     --host={{ nessus_server_id }}
     --port={{ nessus_port_id }}
   become: yes
-  when: nessus_link is failed
-  ignore_errors: yes
+  when: nessus_link is failed and path.stat.islnk is not defined
+  ignore_errors: yes # adding ignore_errors since this will fail until you have an environment with connectivity to a nessus master host
 
-# adding ignore_errors since this will fail until you have an environment with connectivity to a nessus master host
 - name: start nessus agent
   service:
     name: nessusagent
     enabled: yes
     state: started
-  ignore_errors: yes
+  ignore_errors: yes # adding ignore_errors since this will fail until you have an environment with connectivity to a nessus master host
