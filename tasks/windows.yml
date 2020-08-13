@@ -1,37 +1,50 @@
 ---
-- name: create {{ win_agent_path }} directory
+- name: checking for agent install
+  win_service:
+    name: 'tenable nessus agent'
+  register: agent
+
+- debug:
+    msg: "nessus agent not found (installing)"
+  when: not agent.exists
+
+- debug:
+    msg: "nessus agent found (skipping install)"
+  when: agent.exists
+
+- name: create {{ windows_agent_log }} directory
   win_file:
     path: '{{ win_agent_path }}'
     state: directory
+  when: not agent.exists
 
 - name: create {{ win_agent_logs }} directory
   win_file:
     path: '{{ win_agent_logs }}'
     state: directory
-
-- name: checking for installer
-  win_stat:
-    path: '{{ win_agent_path }}{{ windows_nessus_agent_filename }}'
-  register: installer
-
-- name: move installer to {{ win_agent_path }} directory
-  win_copy:
-    src: '{{ lin_agent_path }}/{{ item.name }}'
-    dest: '{{ win_agent_path }}{{ item.name }}'
-  with_items:
-    - { name: '{{ windows_nessus_agent_filename }}'}
-  when: not installer.stat.exists
+  when: not agent.exists
 
 - name: install nessus agent (windows)
   win_package:
-    path: '{{ win_agent_path }}\\{{ item.name }}'
-    chdir: '{{ win_agent_path }}'
+    path: '{{ windows_nessus_agent_url }}'
+    log_path: '{{ windows_agent_log }}\nessus_log.txt'
+    product_id: '{{ windows_nessus_product_id }}'
     state: present
-    log_path: '{{ win_agent_logs }}\\{{ item.name }}_log.txt'
-    validate_certs: no
-  with_items:
-    - { name: '{{ windows_nessus_agent_filename }}' }
+    arguments: /qn
+  ignore_errors: yes # adding ignore_errors since this will fail until you have an environment with connectivity to a nessus master host
+  when: not agent.exists
 
 - name: link nessus agent (windows)
-  win_command: >-
-    '{{ win_nessus_path }} agent link --key={{ nessus_agent_key }} --host={{ nessus_server_id }} --port={{ nessus_port_id }}'
+  win_command: >
+    "{{ windows_nessus_agent_path }}\nessuscli.exe" agent link
+    --key={{ nessus_agent_key }}
+    --host={{ nessus_server_id }}
+    --port={{ nessus_port_id }}
+  ignore_errors: yes # adding ignore_errors since this will fail until you have an environment with connectivity to a nessus master host
+  when: not agent.exists
+
+- name: verify nessus started
+  win_service:
+    name: 'tenable nessus agent'
+    state: started
+    start_mode: auto

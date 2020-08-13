@@ -23,6 +23,17 @@
   yum:
     name: "{{ lin_agent_path }}/{{ redhat_nessus_agent_filename }}"
     state: present
+    validate_certs: no
+    disable_plugin: "yum-rhn-plugin"
+    disablerepo: "rhel-8-appstream-rhui-rpms,rhel-8-baseos-rhui-rpms,rhui-client-config-server-8"
+  when: path.stat.islnk is not defined
+
+- name: check agent link status
+  command: '{{ redhat_nessus_agent_path }}/sbin/nessuscli agent status'
+  become: yes
+  register: nessus_link
+  ignore_errors: yes # adding ignore_errors since this will fail until you have an environment with connectivity to a nessus master host
+  changed_when: nessus_link.rc != 0 and path.stat.islnk is defined
 
 - name: register nessus agent (redhat)
   shell: >-
