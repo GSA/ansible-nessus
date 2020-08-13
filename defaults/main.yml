@@ -1,7 +1,12 @@
 ---
 # defaults file for ansible-nessus
-win_agent_path: "C:\\Temp\\Agents\\" # default agent path directory windows
-lin_agent_path: "/opt/GSA/install_files" # default agent path directory redhat
-win_agent_logs: "C:\\Temp\\Agents\\Logs" # default agent log directory windows
-lin_nessus_path: "/opt/nessus_agent/sbin/nessuscli" # default redhat nessus agent path
-win_nessus_path: "%ProgramFiles%\\Tenable\\Nessus Agent\\nessuscli.exe" # default windows nessus agent path
+
+#redhat
+redhat_nessus_agent_path: "/opt/nessus_agent/sbin/nessuscli" # default redhat install directory
+redhat_nessus_agent_url: "" # default redhat agent url
+
+#windows
+windows_nessus_agent_path: "%ProgramFiles%\\Tenable\\Nessus Agent\\nessuscli.exe"
+windows_nessus_agent_url: "" # default windows agent artifactory url
+windows_nessus_product_id: "" # win_package using a url requires a product_id
+windows_agent_log: "C:\\Temp\\Logs" # default agent windows log directory

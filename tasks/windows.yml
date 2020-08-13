@@ -14,13 +14,7 @@
 
 - name: create {{ windows_agent_log }} directory
   win_file:
-    path: '{{ win_agent_path }}'
-    state: directory
-  when: not agent.exists
-
-- name: create {{ win_agent_logs }} directory
-  win_file:
-    path: '{{ win_agent_logs }}'
+    path: '{{ windows_agent_log }}'
     state: directory
   when: not agent.exists
 
@@ -36,7 +30,7 @@
 
 - name: link nessus agent (windows)
   win_command: >
-    "{{ windows_nessus_agent_path }}\nessuscli.exe" agent link
+    "{{ windows_nessus_agent_path }}" agent link
     --key={{ nessus_agent_key }}
     --host={{ nessus_server_id }}
     --port={{ nessus_port_id }}

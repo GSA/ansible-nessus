@@ -1,39 +1,18 @@
 ---
-- name: create {{ lin_agent_path }} directory
-  file:
-    path: '{{ lin_agent_path }}'
-    state: directory
-    mode: '0755'
-
-- name: checking for installer
-  stat:
-    path: '{{ lin_agent_path }}{{ redhat_nessus_agent_filename }}'
-  register: installer
-
-- name: move installer to {{ lin_install_path }} directory
-  copy:
-    src: '{{ lin_agent_path }}/{{ item.name }}'
-    dest: '{{ lin_agent_path }}/{{ item.name }}'
-    mode: '0755'
-  with_items:
-    - { name: '{{ redhat_nessus_agent_filename }}'}
-  when: not installer.stat.exists
-
 - name: install nessus agent (redhat)
   yum:
-    name: "{{ lin_agent_path }}/{{ redhat_nessus_agent_filename }}"
+    name: '{{ redhat_nessus_agent_url }}'
     state: present
     validate_certs: no
     disable_plugin: "yum-rhn-plugin"
     disablerepo: "rhel-8-appstream-rhui-rpms,rhel-8-baseos-rhui-rpms,rhui-client-config-server-8"
-  when: path.stat.islnk is not defined
-
+    download_dir: '{{ redhat_nessus_agent_path }}'
+    
 - name: check agent link status
   command: '{{ redhat_nessus_agent_path }}/sbin/nessuscli agent status'
   become: yes
   register: nessus_link
   ignore_errors: yes # adding ignore_errors since this will fail until you have an environment with connectivity to a nessus master host
-  changed_when: nessus_link.rc != 0 and path.stat.islnk is defined
 
 - name: register nessus agent (redhat)
   shell: >-
@@ -41,10 +20,8 @@
   args:
     creates: "/opt/nessus_agent/var/nessus/master.key"
 
-- name: ensure required services are started (redhat)
+- name: verify nessus started
   service:
-    name: "{{ item }}"
+    name: nessusagent
     enabled: yes
     state: started
-  with_items:
-    - nessusagent
