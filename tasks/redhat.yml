@@ -1,4 +1,17 @@
 ---
+- name: checking for agent install
+  stat:
+    path: '{{ redhat_nessus_agent_path }}'
+  register: agent
+
+- debug:
+    msg: "nessus agent not found (installing)"
+  when: not agent.stat.exists
+
+- debug:
+    msg: "nessus agent found (skipping install)"
+  when: agent.stat.exists
+
 - name: install nessus agent (redhat)
   yum:
     name: '{{ redhat_nessus_agent_url }}'
@@ -6,19 +19,24 @@
     validate_certs: no
     disable_plugin: "yum-rhn-plugin"
     disablerepo: "rhel-8-appstream-rhui-rpms,rhel-8-baseos-rhui-rpms,rhui-client-config-server-8"
-    download_dir: '{{ redhat_nessus_agent_path }}'
-    
+  when: not agent.stat.exists
+
 - name: check agent link status
-  command: '{{ redhat_nessus_agent_path }}/sbin/nessuscli agent status'
+  command: '{{ redhat_nessus_agent_path }} agent status'
   become: yes
   register: nessus_link
   ignore_errors: yes # adding ignore_errors since this will fail until you have an environment with connectivity to a nessus master host
+  changed_when: nessus_link.rc != 0
 
 - name: register nessus agent (redhat)
-  shell: >-
-    "{{ lin_nessus_path }} agent link --key={{ nessus_agent_key }} --groups='{{ group_name }}' --host='{{ nessus_server_id }}' --port='{{ nessus_port_id }}'"
-  args:
-    creates: "/opt/nessus_agent/var/nessus/master.key"
+  command: >
+        {{ redhat_nessus_agent_path }} agent link
+        --key={{ nessus_agent_key }}
+        --host={{ nessus_server_id }}
+        --port={{ nessus_port_id }}
+  ignore_errors: yes # adding ignore_errors since this will fail until you have an environment with connectivity to a nessus master host
+  become: yes
+  when: nessus_link is failed
 
 - name: verify nessus started
   service:

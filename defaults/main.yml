@@ -1,6 +1,11 @@
 ---
 # defaults file for ansible-nessus
 
+#universal
+nessus_agent_key: ""
+nessus_server_id: ""
+nessus_port_id: ""
+
 #redhat
 redhat_nessus_agent_path: "/opt/nessus_agent/sbin/nessuscli" # default redhat install directory
 redhat_nessus_agent_url: "" # default redhat agent url
