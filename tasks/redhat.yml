@@ -26,16 +26,16 @@
   become: yes
   register: nessus_link
   ignore_errors: yes # adding ignore_errors since this will fail until you have an environment with connectivity to a nessus master host
-  changed_when: nessus_link.rc != 0
+  when: agent.stat.exists
 
-- name: register nessus agent (redhat)
-  command: >
-        {{ redhat_nessus_agent_path }} agent link
-        --key={{ nessus_agent_key }}
-        --host={{ nessus_server_id }}
-        --port={{ nessus_port_id }}
-  ignore_errors: yes # adding ignore_errors since this will fail until you have an environment with connectivity to a nessus master host
+- debug:
+    msg: "nessus agent still linked"
+  when: '"[info] [agent] Linked to" in nessus_link.stdout'
+
+- name: register nessus agent
+  shell: "{{ redhat_nessus_agent_path }} agent link --key={{ nessus_agent_key }} --host={{ nessus_server_id }} --port={{ nessus_port_id }}"
   become: yes
+  args:
   when: nessus_link is failed
 
 - name: verify nessus started
