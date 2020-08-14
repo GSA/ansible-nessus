@@ -26,7 +26,8 @@
   become: yes
   register: nessus_link
   ignore_errors: yes # adding ignore_errors since this will fail until you have an environment with connectivity to a nessus master host
-  when: agent.stat.exists
+  when: not agent.stat.exists or agent.stat.exists
+  changed_when: '"[info] [agent] Linked to" not in nessus_link.stdout'
 
 - debug:
     msg: "nessus agent still linked"
