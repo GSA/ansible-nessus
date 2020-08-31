@@ -18,7 +18,7 @@
     state: present
     validate_certs: no
     disable_plugin: "yum-rhn-plugin"
-    disablerepo: "rhel-8-appstream-rhui-rpms,rhel-8-baseos-rhui-rpms,rhui-client-config-server-8"
+    disablerepo: "*"
   when: not agent.stat.exists
 
 - name: check agent link status
