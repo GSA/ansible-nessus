@@ -30,10 +30,10 @@
 
 - name: link nessus agent (windows)
   win_command: >
-    "{{ windows_nessus_agent_path }}" agent link
-    --key={{ nessus_agent_key }}
-    --host={{ nessus_server_id }}
-    --port={{ nessus_port_id }}
+    "{{ windows_nessus_agent_path }}"\nesssuscli.exe agent link
+    --key='{{ agent_secrets.nessus_agent_key }}'
+    --host='{{ agent_secrets.nessus_server_id }}'
+    --port='{{ agent_secrets.nessus_port_id }}'
   ignore_errors: yes # adding ignore_errors since this will fail until you have an environment with connectivity to a nessus master host
   when: not agent.exists
 
