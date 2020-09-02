@@ -42,6 +42,7 @@
   become: yes
   args:
   when: nessus_link is failed
+  ignore_errors: yes
 
 - name: verify nessus started
   service:
