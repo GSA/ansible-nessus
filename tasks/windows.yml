@@ -30,7 +30,7 @@
 
 - name: link nessus agent (windows)
   win_command: >
-    "{{ windows_nessus_agent_path }}"\nesssuscli.exe agent link
+    "{{ windows_nessus_agent_path }}"\nessuscli.exe agent link
     --key='{{ agent_secrets.nessus_agent_key }}'
     --host='{{ agent_secrets.nessus_server_id }}'
     --port='{{ agent_secrets.nessus_port_id }}'
